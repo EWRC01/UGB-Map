@@ -10,11 +10,12 @@
         }
     </style>
 <script src="./app.js"></script>
+<script src="https://nominatim.openstreetmap.org/js/nominatim.js"></script>
 </head>
 <body>
     <h1>University Map</h1>
     <input type="text" id="searchInput" placeholder="Search for a building">
-    <button onclick="search()">Search</button>
+    <button id="searchButton" onclick="searchTest()">Search</button>
     <div id="map"></div>
     <script async
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOVYRIgupAurZup5y1PRh8Ismb1A3lLao&callback=initMap&callback=initMap">
