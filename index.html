@@ -2,24 +2,48 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>University Map</title>
-    <style>
-        #map {
-            height: 400px;
-            width: 100%;
-        }
-    </style>
-<script src="./app.js"></script>
-<script src="https://nominatim.openstreetmap.org/js/nominatim.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaflet Map</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""/>
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""></script>
 </head>
 <body>
-    <h1>University Map</h1>
-    <input type="text" id="searchInput" placeholder="Search for a building">
-    <button id="searchButton" onclick="searchTest()">Search</button>
-    <div id="map"></div>
-    <script async
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOVYRIgupAurZup5y1PRh8Ismb1A3lLao&callback=initMap&callback=initMap">
-</script>
+  <div class="container">
+    <div id="controls">
+      <!-- Add the "Get Current Location" button -->
+      <button id="getCurrentLocationButton">Get Current Location</button>
+
+      <!-- Replace the destination input field with a dropdown (combobox) -->
+      <select id="destinationSelect">
+          <option value="13.97837,-89.56973">Location 1</option>
+          <option value="13.46151,-88.16579">Location 2</option>
+          <!-- Add more options as needed -->
+      </select>
+
+      <!-- Add buttons for "Show Location" and "Calculate Instructions" -->
+      <button id="showLocationButton">Show Location</button>
+      <button id="calculateInstructionsButton">Calculate Instructions</button>
+      <button id="createRedPolylineButton">Create Red Polyline</button>
+      <button id="speakInstructionsButton">Speak Instructions</button>
+
+    </div>
+  </div>
+  <div id="map"></div>
+  <!-- Add a table to display turn-by-turn instructions -->
+  <!-- Add this empty table for displaying instructions to your HTML -->
+<table id="instructionsTable">
+  <tr>
+      <th>Step</th>
+      <th>Instruction</th>
+      <th>Distance</th>
+  </tr>
+</table>
+  <script src="app.js"></script>
 </body>
 </html>
-
