@@ -66,12 +66,15 @@ function displayInstructions(origin, destination) {
 
                             // Add a 'Speak' button to each instruction row
                             const speakButton = document.createElement('button');
-                            speakButton.textContent = 'Speak';
+                            speakButton.textContent = 'Leer';
+                            speakButton.className = "btn btn-primary"; // Apply Bootstrap classes
                             speakButton.addEventListener('click', () => {
-                                // Use the Web Speech API to speak the instruction
-                                const speechSynthesis = window.speechSynthesis;
-                                const speechUtterance = new SpeechSynthesisUtterance(instructionText);
-                                speechSynthesis.speak(speechUtterance);
+                                // Use the Web Speech API to speak the instruction with a delay
+                                setTimeout(() => {
+                                    const speechSynthesis = window.speechSynthesis;
+                                    const speechUtterance = new SpeechSynthesisUtterance(instructionText);
+                                    speechSynthesis.speak(speechUtterance);
+                                }, index * 1000); // Delay each instruction by 1 second (adjust as needed)
                             });
                             instructionRow.appendChild(speakButton);
                         }
@@ -105,7 +108,6 @@ function displayInstructions(origin, destination) {
         alert("Please provide both origin and destination.");
     }
 }
-
 
 
 // Function to parse coordinates entered by the user
@@ -155,8 +157,33 @@ function createRedPolyline(currentLocation, destination) {
     }
 }
 
-// Event listener for the "Create Red Polyline" button
-document.getElementById("createRedPolylineButton").addEventListener("click", function () {
+// Combined function to create a red polyline, display instructions, and show marker
+function createRedPolylineDisplayInstructionsAndMarker(destination) {
+    if (currentLocation && destination) {
+        // Create an array of coordinates for the polyline
+        const polylineCoordinates = [currentLocation, destination];
+
+        // Create a polyline with the coordinates and add it to the map
+        const polyline = L.polyline(polylineCoordinates, { color: 'red' }).addTo(map);
+        
+        // Fit the map view to the bounds of the polyline
+        map.fitBounds(polyline.getBounds());
+
+        // Display turn-by-turn instructions
+        displayInstructions(currentLocation, destination);
+
+        // Show marker for the destination
+        showMarkerOnMap(destination);
+    } else {
+        alert("Please provide both current location and destination.");
+    }
+}
+
+// Call getCurrentLocation() when the page loads
+window.addEventListener('load', getCurrentLocation);
+
+// Event listener for the "Create Red Polyline and Display Instructions" button
+document.getElementById("calculateInstructionsButton").addEventListener("click", function () {
     // Get the selected option from the dropdown
     const destinationSelect = document.getElementById("destinationSelect");
     const selectedOption = destinationSelect.options[destinationSelect.selectedIndex];
@@ -164,7 +191,7 @@ document.getElementById("createRedPolylineButton").addEventListener("click", fun
     if (selectedOption) {
         const destinationCoordinates = selectedOption.value.split(',').map(parseFloat);
         if (currentLocation) {
-            createRedPolyline(currentLocation, destinationCoordinates);
+            createRedPolylineDisplayInstructionsAndMarker(destinationCoordinates);
         } else {
             alert("Please get your current location first.");
         }
@@ -173,41 +200,6 @@ document.getElementById("createRedPolylineButton").addEventListener("click", fun
     }
 });
 
-// Event listener for the "Show Location" button
-document.getElementById("showLocationButton").addEventListener("click", function () {
-    var locationInput = document.getElementById("locationInput").value;
-    showLocationOnMap(locationInput);
-});
 
-// Event listener for the "Get Current Location" button
+// Event listener for the "Get Current Location" button (this remains the same)
 document.getElementById("getCurrentLocationButton").addEventListener("click", getCurrentLocation);
-
-// Event listener for the "Calculate Instructions" button
-document.getElementById("calculateInstructionsButton").addEventListener("click", function () {
-    // Get the selected option from the dropdown
-    const destinationSelect = document.getElementById("destinationSelect");
-    const selectedOption = destinationSelect.options[destinationSelect.selectedIndex];
-    
-    if (selectedOption) {
-        const coordinates = selectedOption.value.split(',').map(parseFloat);
-        if (currentLocation) {
-            displayInstructions(currentLocation, coordinates); // Pass current location as the first parameter
-            showMarkerOnMap(coordinates); // Show marker for the selected destination
-        } else {
-            alert("Please get your current location first.");
-        }
-    } else {
-        alert("Please select a destination from the dropdown.");
-    }
-});
-
-// Event listener for the "Speak Instructions" button
-document.getElementById("speakInstructionsButton").addEventListener("click", function () {
-    const instructionsTable = document.getElementById("instructionsTable");
-    const speakButtons = instructionsTable.querySelectorAll("button");
-
-    // Trigger reading out all instructions using the "Speak" buttons
-    speakButtons.forEach(function (speakButton) {
-        speakButton.click();
-    });
-});

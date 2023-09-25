@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leaflet Map</title>
+    <title>UGB Map</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -17,22 +17,28 @@
 <body>
   
   <div class="container mt-4">
-    <div id="controls" class="bg-light p-3 rounded">
+
+    <h1>UGB MAPS</h1>
+    <br id="controls" class="bg-light p-3 rounded">
       <!-- Add the "Get Current Location" button -->
-      <button id="getCurrentLocationButton" class="btn btn-primary">Get Current Location</button>
+      <button id="getCurrentLocationButton" class="btn btn-primary">Obten mi ubicacion actual</button>
+      <!-- Add buttons for "Show Location" and "Calculate Instructions" -->
+      <button id="calculateInstructionsButton" class="btn btn-danger ">Calcula las instrucciones</button>
+      <button id="speakInstructionsButton" class="btn btn-success ">Lee en voz alta las instrucciones</button>
+  <hr/>
+
+      
 
       <!-- Replace the destination input field with a dropdown (combobox) -->
-      <select id="destinationSelect" class="form-control mt-2">
+      <label for="destinationSelect">Selecciona un edificio:</label>
+      <select id="destinationSelect" class="form-control">
+        <option value="default" selected>Selecciona una opcion</option>
           <option value="13.48850,-88.19343">Laboratorio Dennis Ritchie</option>
           <option value="13.4886243, -88.1936105">Edificio Innova</option>
           <option value="13.4886574, -88.1938024">Edificio Juan Jose Cañas</option>
           <!-- Add more options as needed -->
       </select>
 
-      <!-- Add buttons for "Show Location" and "Calculate Instructions" -->
-      <button id="calculateInstructionsButton" class="btn btn-primary mt-2">Calculate Instructions</button>
-      <button id="createRedPolylineButton" class="btn btn-danger mt-2">Create Red Polyline</button>
-      <button id="speakInstructionsButton" class="btn btn-success mt-2">Speak Instructions</button>
     </div>
   </div>
 
@@ -45,19 +51,20 @@
 
     <!-- Add a table to display turn-by-turn instructions -->
   <!-- Add this empty table for displaying instructions to your HTML -->
-  <table id="instructionsTable" class="table table-bordered mt-4">
+  <hr/>
+  <table id="instructionsTable" class="table table-bordered">
     <thead class="thead-light">
       <tr>
-          <th>Step</th>
-          <th>Instruction</th>
-          <th>Distance</th>
+          <th>Pasos</th>
+          <th>Instrucciones</th>
+          <th>Distancia</th>
       </tr>
     </thead>
     <tbody>
       <!-- Instructions will be added dynamically here -->
     </tbody>
   </table>
-  </div>
+  </hr>
   
   <script src="app.js"></script>
 </body>
