@@ -2,7 +2,7 @@
 const apiKey = '5b3ce3597851110001cf624843656783377449108c86b360b7cf906c';
 
 // Initialize the map with different coordinates and zoom level
-var map = L.map('map').setView([51.505, -0.09], 13);
+var map = L.map('map').setView([13.48861,-88.19208], 13);
 
 // Add OpenStreetMap as the base layer
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -38,10 +38,12 @@ function showMarkerOnMap(coordinates, isCurrentLocation = false) {
     }
 }
 
-// Function to display turn-by-turn instructions using OpenRouteService
+// Function to display turn-by-turn instructions in Spanish using OpenRouteService
 function displayInstructions(origin, destination) {
     if (origin && destination) {
-        const url = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${apiKey}&start=${origin[1]},${origin[0]}&end=${destination[1]},${destination[0]}`;
+        const profile = 'foot-walking'; // Use the walking profile
+        const language = 'en'; // Specify 'es' for Spanish
+        const url = `https://api.openrouteservice.org/v2/directions/${profile}?api_key=${apiKey}&start=${origin[1]},${origin[0]}&end=${destination[1]},${destination[0]}&language=${language}`;
 
         fetch(url)
             .then(response => response.json())
@@ -57,11 +59,12 @@ function displayInstructions(origin, destination) {
                             const instructionRow = document.createElement('tr');
                             const distanceInMeters = step.distance;
                             const distanceText = distanceInMeters >= 1000 ? (distanceInMeters / 1000).toFixed(2) + ' km' : distanceInMeters.toFixed(0) + ' meters';
-                            const instructionText = `${index + 1}. ${step.instruction}. Distance: ${distanceText}`;
+                            const instructionText = `${index + 1}. ${step.instruction}. Distancia: ${distanceText}`;
+
                             instructionRow.innerHTML = `<td>${index + 1}.</td><td>${step.instruction}</td><td>${distanceText}</td>`;
                             instructionsTable.appendChild(instructionRow);
 
-                                        // Add a 'Speak' button to each instruction row
+                            // Add a 'Speak' button to each instruction row
                             const speakButton = document.createElement('button');
                             speakButton.textContent = 'Speak';
                             speakButton.addEventListener('click', () => {
