@@ -41,9 +41,10 @@ function showMarkerOnMap(coordinates, isCurrentLocation = false) {
 // Function to display turn-by-turn instructions in Spanish using OpenRouteService
 function displayInstructions(origin, destination) {
     if (origin && destination) {
-        const profile = 'foot-walking'; // Use the walking profile
+        const profile1 = 'driving-car'; // Use the walking profile
+        const profile2 = 'foot-walking';
         const language = 'en'; // Specify 'es' for Spanish
-        const url = `https://api.openrouteservice.org/v2/directions/${profile}?api_key=${apiKey}&start=${origin[1]},${origin[0]}&end=${destination[1]},${destination[0]}&language=${language}`;
+        const url = `https://api.openrouteservice.org/v2/directions/${profile2}?api_key=${apiKey}&start=${origin[1]},${origin[0]}&end=${destination[1]},${destination[0]}&language=${language}`;
 
         fetch(url)
             .then(response => response.json())
@@ -200,6 +201,16 @@ document.getElementById("calculateInstructionsButton").addEventListener("click",
     }
 });
 
+// Event listener for the "Speak Instructions" button
+document.getElementById("speakInstructionsButton").addEventListener("click", function () {
+    const instructionsTable = document.getElementById("instructionsTable");
+    const speakButtons = instructionsTable.querySelectorAll("button");
+
+    // Trigger reading out all instructions using the "Speak" buttons
+    speakButtons.forEach(function (speakButton) {
+        speakButton.click();
+    });
+});
 
 // Event listener for the "Get Current Location" button (this remains the same)
 document.getElementById("getCurrentLocationButton").addEventListener("click", getCurrentLocation);
