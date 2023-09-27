@@ -50,24 +50,31 @@ function displayInstructions(origin, destination) {
             .then(response => response.json())
             .then(data => {
                 if (data.features && data.features.length > 0) {
-                    const instructions = data.features[0].properties.segments[0].steps;
+                    const routeGeometry = data.features[0].geometry.coordinates;
+
+                    // Create an array of coordinates for the route
+                    const routeCoordinates = routeGeometry.map(coord => [coord[1], coord[0]]);
+
+                    // Create a polyline with the route coordinates and add it to the map
+                    var route = L.polyline(routeCoordinates, { color: 'blue' }); // Change color to blue
+                    route.addTo(map);
 
                     // Display instructions in a table
                     const instructionsTable = document.getElementById("instructionsTable");
                     instructionsTable.innerHTML = ''; // Clear previous instructions
-                    instructions.forEach((step, index) => {
+                    data.features[0].properties.segments[0].steps.forEach((step, index) => {
                         if (step.instruction) {
                             const instructionRow = document.createElement('tr');
                             const distanceInMeters = step.distance;
                             const distanceText = distanceInMeters >= 1000 ? (distanceInMeters / 1000).toFixed(2) + ' km' : distanceInMeters.toFixed(0) + ' meters';
-                            const instructionText = `${index + 1}. ${step.instruction}. Distancia: ${distanceText}`;
+                            const instructionText = `${index + 1}. ${step.instruction}. Distance: ${distanceText}`;
 
                             instructionRow.innerHTML = `<td>${index + 1}.</td><td>${step.instruction}</td><td>${distanceText}</td>`;
                             instructionsTable.appendChild(instructionRow);
 
                             // Add a 'Speak' button to each instruction row
                             const speakButton = document.createElement('button');
-                            speakButton.textContent = 'Leer';
+                            speakButton.textContent = 'Speak';
                             speakButton.className = "btn btn-primary"; // Apply Bootstrap classes
                             speakButton.addEventListener('click', () => {
                                 // Use the Web Speech API to speak the instruction with a delay
@@ -80,24 +87,6 @@ function displayInstructions(origin, destination) {
                             instructionRow.appendChild(speakButton);
                         }
                     });
-
-                    // Create an array of coordinates for the route
-                    const routeCoordinates = instructions.map(step => {
-                        if (step.maneuver && step.maneuver.location) {
-                            return [step.maneuver.location[1], step.maneuver.location[0]];
-                        } else {
-                            return null;
-                        }
-                    });
-
-                    // Filter out any coordinates that are null
-                    const filteredRouteCoordinates = routeCoordinates.filter(coord => coord !== null);
-                    console.log(routeCoordinates);
-
-                    // Create a polyline with the route coordinates and add it to the map
-                    var route = L.polyline(filteredRouteCoordinates, { color: 'red' });
-                    route.addTo(map);
-
                 } else {
                     console.error('No route found.');
                 }
@@ -109,6 +98,7 @@ function displayInstructions(origin, destination) {
         alert("Please provide both origin and destination.");
     }
 }
+
 
 
 // Function to parse coordinates entered by the user
@@ -142,33 +132,12 @@ function getCurrentLocation() {
     }
 }
 
-// Function to create a red polyline between current location and a destination
-function createRedPolyline(currentLocation, destination) {
-    if (currentLocation && destination) {
-        // Create an array of coordinates for the polyline
-        const polylineCoordinates = [currentLocation, destination];
 
-        // Create a polyline with the coordinates and add it to the map
-        const polyline = L.polyline(polylineCoordinates, { color: 'red' }).addTo(map);
-        
-        // Fit the map view to the bounds of the polyline
-        map.fitBounds(polyline.getBounds());
-    } else {
-        alert("Please provide both current location and destination.");
-    }
-}
 
 // Combined function to create a red polyline, display instructions, and show marker
 function createRedPolylineDisplayInstructionsAndMarker(destination) {
     if (currentLocation && destination) {
-        // Create an array of coordinates for the polyline
-        const polylineCoordinates = [currentLocation, destination];
 
-        // Create a polyline with the coordinates and add it to the map
-        const polyline = L.polyline(polylineCoordinates, { color: 'red' }).addTo(map);
-        
-        // Fit the map view to the bounds of the polyline
-        map.fitBounds(polyline.getBounds());
 
         // Display turn-by-turn instructions
         displayInstructions(currentLocation, destination);
@@ -182,7 +151,6 @@ function createRedPolylineDisplayInstructionsAndMarker(destination) {
 
 // Call getCurrentLocation() when the page loads
 window.addEventListener('load', getCurrentLocation);
-
 // Event listener for the "Create Red Polyline and Display Instructions" button
 document.getElementById("calculateInstructionsButton").addEventListener("click", function () {
     // Get the selected option from the dropdown
@@ -192,6 +160,14 @@ document.getElementById("calculateInstructionsButton").addEventListener("click",
     if (selectedOption) {
         const destinationCoordinates = selectedOption.value.split(',').map(parseFloat);
         if (currentLocation) {
+            // Clear previous destination markers and polylines
+            destinationMarkers.clearLayers();
+            map.eachLayer(function (layer) {
+                if (layer instanceof L.Polyline) {
+                    map.removeLayer(layer);
+                }
+            });
+
             createRedPolylineDisplayInstructionsAndMarker(destinationCoordinates);
         } else {
             alert("Please get your current location first.");
@@ -200,6 +176,7 @@ document.getElementById("calculateInstructionsButton").addEventListener("click",
         alert("Please select a destination from the dropdown.");
     }
 });
+
 
 // Event listener for the "Speak Instructions" button
 document.getElementById("speakInstructionsButton").addEventListener("click", function () {
