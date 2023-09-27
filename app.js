@@ -121,8 +121,17 @@ function getCurrentLocation() {
             var lat = position.coords.latitude;
             var lon = position.coords.longitude;
             currentLocation = [lat, lon];
+            
+            // Remove the previous pan if it exists
+            if (currentLocationMarker) {
+                map.removeLayer(currentLocationMarker);
+            }
+
+            // Create a new marker for the current location
+            currentLocationMarker = L.marker(currentLocation).addTo(map);
+
+            // Pan to the new current location
             map.panTo(new L.LatLng(lat, lon), 12);
-            showMarkerOnMap(currentLocation, true); // Show marker for the current location
         }, function (error) {
             // Handle error here, e.g., show an error message
             console.error("Error getting location:", error.message);
@@ -149,8 +158,19 @@ function createRedPolylineDisplayInstructionsAndMarker(destination) {
     }
 }
 
+
 // Call getCurrentLocation() when the page loads
 window.addEventListener('load', getCurrentLocation);
+
+
+// Function to repeatedly get the current location every 5 seconds
+function repeatGetCurrentLocation() {
+    setInterval(getCurrentLocation, 5000); // Repeat every 5 seconds
+}
+
+// Call repeatGetCurrentLocation() when the page loads
+window.addEventListener('load', repeatGetCurrentLocation);
+
 // Event listener for the "Create Red Polyline and Display Instructions" button
 document.getElementById("calculateInstructionsButton").addEventListener("click", function () {
     // Get the selected option from the dropdown
