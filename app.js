@@ -44,56 +44,70 @@ const osrmServerUrl = 'http://localhost:5000'; // Change to your OSRM server URL
 function displayInstructions(origin, destination) {
     if (origin && destination) {
         const language = 'en'; // Specify 'es' for Spanish
-        const url = `${osrmServerUrl}/route/v1/driving/${origin[1]},${origin[0]};${destination[1]},${destination[0]}?language=${language}`;
+        const url = `${osrmServerUrl}/route/v1/driving/${origin[1]},${origin[0]};${destination[1]},${destination[0]}`;
 
         fetch(url)
             .then(response => response.json())
-            .then(data => {
-                if (data.routes && data.routes.length > 0) {
-                    const routeGeometry = data.routes[0].geometry.coordinates;
+// ...
+.then(data => {
+    if (data.routes && data.routes.length > 0) {
+        const route = data.routes[0];
 
-                    // Create an array of coordinates for the route
-                    const routeCoordinates = routeGeometry.map(coord => [coord[1], coord[0]]);
+        if (route.geometry && route.geometry.coordinates) {
+            const routeGeometry = route.geometry.coordinates;
 
-                    // Create a polyline with the route coordinates and add it to the map
-                    var route = L.polyline(routeCoordinates, { color: 'blue' }); // Change color to blue
-                    route.addTo(map);
+            // Check if routeGeometry is defined
+            if (routeGeometry) {
+                // Create an array of coordinates for the route
+                const routeCoordinates = routeGeometry.map(coord => [coord[1], coord[0]]);
+    
+                // Create a polyline with the route coordinates and add it to the map
+                var routePolyline = L.polyline(routeCoordinates, { color: 'blue' }); // Change color to blue
+                routePolyline.addTo(map);
+    
+                // Display instructions in a table
+                const instructionsTable = document.getElementById("instructionsTable");
+                instructionsTable.innerHTML = ''; // Clear previous instructions
+                route.legs[0].steps.forEach((step, index) => {
+                    if (step.maneuver.instruction) {
+                        const instructionRow = document.createElement('tr');
+                        const distanceInMeters = step.distance;
+                        const distanceText = distanceInMeters >= 1000 ? (distanceInMeters / 1000).toFixed(2) + ' km' : distanceInMeters.toFixed(0) + ' meters';
+                        const instructionText = `${index + 1}. ${step.maneuver.instruction}. Distance: ${distanceText}`;
+    
+                        instructionRow.innerHTML = `<td>${index + 1}.</td><td>${step.maneuver.instruction}</td><td>${distanceText}</td>`;
+                        instructionsTable.appendChild(instructionRow);
+    
+                        // Add a 'Speak' button to each instruction row
+                        const speakButton = document.createElement('button');
+                        speakButton.textContent = 'Speak';
+                        speakButton.className = "btn btn-primary"; // Apply Bootstrap classes
+                        speakButton.addEventListener('click', () => {
+                            // Use the Web Speech API to speak the instruction with a delay
+                            setTimeout(() => {
+                                const speechSynthesis = window.speechSynthesis;
+                                const speechUtterance = new SpeechSynthesisUtterance(instructionText);
+                                speechSynthesis.speak(speechUtterance);
+                            }, index * 1000); // Delay each instruction by 1 second (adjust as needed)
+                        });
+                        instructionRow.appendChild(speakButton);
+                    }
+                });
+            } else {
+                console.error('Route geometry is undefined.');
+            }
+        } else {
+            console.error('Route geometry or coordinates are missing or undefined.');
+        }
+    } else {
+        console.error('No route found.');
+    }
+})
+.catch(error => {
+    console.error('Error getting directions:', error);
+});
+// ...
 
-                    // Display instructions in a table
-                    const instructionsTable = document.getElementById("instructionsTable");
-                    instructionsTable.innerHTML = ''; // Clear previous instructions
-                    data.routes[0].legs[0].steps.forEach((step, index) => {
-                        if (step.maneuver.instruction) {
-                            const instructionRow = document.createElement('tr');
-                            const distanceInMeters = step.distance;
-                            const distanceText = distanceInMeters >= 1000 ? (distanceInMeters / 1000).toFixed(2) + ' km' : distanceInMeters.toFixed(0) + ' meters';
-                            const instructionText = `${index + 1}. ${step.maneuver.instruction}. Distance: ${distanceText}`;
-
-                            instructionRow.innerHTML = `<td>${index + 1}.</td><td>${step.maneuver.instruction}</td><td>${distanceText}</td>`;
-                            instructionsTable.appendChild(instructionRow);
-
-                            // Add a 'Speak' button to each instruction row
-                            const speakButton = document.createElement('button');
-                            speakButton.textContent = 'Speak';
-                            speakButton.className = "btn btn-primary"; // Apply Bootstrap classes
-                            speakButton.addEventListener('click', () => {
-                                // Use the Web Speech API to speak the instruction with a delay
-                                setTimeout(() => {
-                                    const speechSynthesis = window.speechSynthesis;
-                                    const speechUtterance = new SpeechSynthesisUtterance(instructionText);
-                                    speechSynthesis.speak(speechUtterance);
-                                }, index * 1000); // Delay each instruction by 1 second (adjust as needed)
-                            });
-                            instructionRow.appendChild(speakButton);
-                        }
-                    });
-                } else {
-                    console.error('No route found.');
-                }
-            })
-            .catch(error => {
-                console.error('Error getting directions:', error);
-            });
     } else {
         alert("Please provide both origin and destination.");
     }
