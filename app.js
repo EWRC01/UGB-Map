@@ -23,7 +23,12 @@ var destinationMarkers = L.layerGroup().addTo(map);
 function showMarkerOnMap(coordinates, isCurrentLocation = false) {
     if (coordinates) {
         // Create a new marker
-        var marker = L.marker(coordinates);
+        var myIcon1 = L.icon({
+            iconUrl: './imgs/goal.png',
+            iconSize: [50, 50],
+            iconAnchor: [30, 30],
+        });
+        var marker = L.marker(coordinates, {icon:myIcon1});
 
         // If it's the current location marker, add it to the map directly
         if (isCurrentLocation) {
@@ -161,9 +166,13 @@ function getCurrentLocation() {
             if (currentLocationMarker) {
                 map.removeLayer(currentLocationMarker);
             }
-
+            var myIcon = L.icon({
+                iconUrl: './imgs/persona.png',
+                iconSize: [50, 50],
+                iconAnchor: [30, 30],
+            });
             // Create a new marker for the current location
-            currentLocationMarker = L.marker(currentLocation).addTo(map);
+            currentLocationMarker = L.marker(currentLocation, {icon:myIcon, title:'Origen', alt:'Origen'}).addTo(map);
 
             // Pan to the new current location
             map.panTo(new L.LatLng(lat, lon), 12);
