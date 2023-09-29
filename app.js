@@ -37,20 +37,20 @@ function showMarkerOnMap(coordinates, isCurrentLocation = false) {
         }
     }
 }
+// Replace with your OSRM server URL
+const osrmServerUrl = 'http://localhost:5000'; // Change to your OSRM server URL
 
-// Function to display turn-by-turn instructions in Spanish using OpenRouteService
+// Function to display turn-by-turn instructions using OSRM
 function displayInstructions(origin, destination) {
     if (origin && destination) {
-        const profile1 = 'driving-car'; // Use the walking profile
-        const profile2 = 'foot-walking';
         const language = 'en'; // Specify 'es' for Spanish
-        const url = `https://api.openrouteservice.org/v2/directions/${profile2}?api_key=${apiKey}&start=${origin[1]},${origin[0]}&end=${destination[1]},${destination[0]}&language=${language}`;
+        const url = `${osrmServerUrl}/route/v1/driving/${origin[1]},${origin[0]};${destination[1]},${destination[0]}?language=${language}`;
 
         fetch(url)
             .then(response => response.json())
             .then(data => {
-                if (data.features && data.features.length > 0) {
-                    const routeGeometry = data.features[0].geometry.coordinates;
+                if (data.routes && data.routes.length > 0) {
+                    const routeGeometry = data.routes[0].geometry.coordinates;
 
                     // Create an array of coordinates for the route
                     const routeCoordinates = routeGeometry.map(coord => [coord[1], coord[0]]);
@@ -62,14 +62,14 @@ function displayInstructions(origin, destination) {
                     // Display instructions in a table
                     const instructionsTable = document.getElementById("instructionsTable");
                     instructionsTable.innerHTML = ''; // Clear previous instructions
-                    data.features[0].properties.segments[0].steps.forEach((step, index) => {
-                        if (step.instruction) {
+                    data.routes[0].legs[0].steps.forEach((step, index) => {
+                        if (step.maneuver.instruction) {
                             const instructionRow = document.createElement('tr');
                             const distanceInMeters = step.distance;
                             const distanceText = distanceInMeters >= 1000 ? (distanceInMeters / 1000).toFixed(2) + ' km' : distanceInMeters.toFixed(0) + ' meters';
-                            const instructionText = `${index + 1}. ${step.instruction}. Distance: ${distanceText}`;
+                            const instructionText = `${index + 1}. ${step.maneuver.instruction}. Distance: ${distanceText}`;
 
-                            instructionRow.innerHTML = `<td>${index + 1}.</td><td>${step.instruction}</td><td>${distanceText}</td>`;
+                            instructionRow.innerHTML = `<td>${index + 1}.</td><td>${step.maneuver.instruction}</td><td>${distanceText}</td>`;
                             instructionsTable.appendChild(instructionRow);
 
                             // Add a 'Speak' button to each instruction row
