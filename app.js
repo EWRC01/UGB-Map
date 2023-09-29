@@ -1,8 +1,8 @@
-// Replace with your OpenRouteService API key
-const apiKey = '5b3ce3597851110001cf624843656783377449108c86b360b7cf906c';
+// Replace with your Grasshopper API key
+const apiKey = 'ddff1e90-c186-428f-9f99-d050abc8f6a0';
 
 // Initialize the map with different coordinates and zoom level
-var map = L.map('map').setView([13.48861,-88.19208], 13);
+var map = L.map('map').setView([13.48861, -88.19208], 13);
 
 // Add OpenStreetMap as the base layer
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -24,7 +24,7 @@ function showMarkerOnMap(coordinates, isCurrentLocation = false) {
     if (coordinates) {
         // Create a new marker
         var marker = L.marker(coordinates);
-        
+
         // If it's the current location marker, add it to the map directly
         if (isCurrentLocation) {
             if (currentLocationMarker) {
@@ -37,77 +37,98 @@ function showMarkerOnMap(coordinates, isCurrentLocation = false) {
         }
     }
 }
-// Replace with your OSRM server URL
-const osrmServerUrl = 'http://localhost:5000'; // Change to your OSRM server URL
-
-// Function to display turn-by-turn instructions using OSRM
+// Initialize a polyline variable to store the route polyline
+var routePolyline = null;
+// Function to display turn-by-turn instructions in Spanish using Grasshopper
 function displayInstructions(origin, destination) {
     if (origin && destination) {
-        const language = 'en'; // Specify 'es' for Spanish
-        const url = `${osrmServerUrl}/route/v1/driving/${origin[1]},${origin[0]};${destination[1]},${destination[0]}`;
+        const profile = 'foot'; // Adjust the profile as needed
+        const language = 'es'; // Specify 'es' for Spanish
+        const grasshopperUrl = `https://graphhopper.com/api/1/route?point=${origin[0]},${origin[1]}&point=${destination[0]},${destination[1]}&vehicle=${profile}&locale=${language}&key=${apiKey}&points_encoded=false`;
 
-        fetch(url)
+        fetch(grasshopperUrl)
             .then(response => response.json())
-// ...
-.then(data => {
-    if (data.routes && data.routes.length > 0) {
-        const route = data.routes[0];
+            .then(data => {
+                if (data.paths && data.paths.length > 0) {
+                    const path = data.paths[0];
+                    
+                    //const routeCoordinates = path.points.coordinates.map(coord => [coord[1], coord[0]]);
 
-        if (route.geometry && route.geometry.coordinates) {
-            const routeGeometry = route.geometry.coordinates;
+                    console.log(path)
+                    const routeCoordinates = path.points.coordinates.map(coord => [coord[1], coord[0]]);
+                    var route = L.polyline(routeCoordinates, { color: 'red' }); // Change color to blue
+                    route.addTo(map);
+                    map.setZoom(15);
+                    
+                
+                    
 
-            // Check if routeGeometry is defined
-            if (routeGeometry) {
-                // Create an array of coordinates for the route
-                const routeCoordinates = routeGeometry.map(coord => [coord[1], coord[0]]);
-    
-                // Create a polyline with the route coordinates and add it to the map
-                var routePolyline = L.polyline(routeCoordinates, { color: 'blue' }); // Change color to blue
-                routePolyline.addTo(map);
-    
-                // Display instructions in a table
-                const instructionsTable = document.getElementById("instructionsTable");
-                instructionsTable.innerHTML = ''; // Clear previous instructions
-                route.legs[0].steps.forEach((step, index) => {
-                    if (step.maneuver.instruction) {
-                        const instructionRow = document.createElement('tr');
-                        const distanceInMeters = step.distance;
-                        const distanceText = distanceInMeters >= 1000 ? (distanceInMeters / 1000).toFixed(2) + ' km' : distanceInMeters.toFixed(0) + ' meters';
-                        const instructionText = `${index + 1}. ${step.maneuver.instruction}. Distance: ${distanceText}`;
-    
-                        instructionRow.innerHTML = `<td>${index + 1}.</td><td>${step.maneuver.instruction}</td><td>${distanceText}</td>`;
-                        instructionsTable.appendChild(instructionRow);
-    
-                        // Add a 'Speak' button to each instruction row
-                        const speakButton = document.createElement('button');
-                        speakButton.textContent = 'Speak';
-                        speakButton.className = "btn btn-primary"; // Apply Bootstrap classes
-                        speakButton.addEventListener('click', () => {
-                            // Use the Web Speech API to speak the instruction with a delay
-                            setTimeout(() => {
-                                const speechSynthesis = window.speechSynthesis;
-                                const speechUtterance = new SpeechSynthesisUtterance(instructionText);
-                                speechSynthesis.speak(speechUtterance);
-                            }, index * 1000); // Delay each instruction by 1 second (adjust as needed)
+                    // Inside the displayInstructions function
+                    const instructionsTable = document.getElementById("instructionsTable");
+                    instructionsTable.innerHTML = ''; // Clear previous instructions
+
+                    let totalDistance = 0; // Variable to store the total distance
+                    let totalDuration = 0; // Variable to store the total duration in seconds
+
+                    if (path.instructions && path.instructions.length > 0) {
+                        path.instructions.forEach((step, index) => {
+                            if (step.text) {
+                                const instructionRow = document.createElement('tr');
+                                const distanceInMeters = step.distance;
+                                const distanceText = distanceInMeters >= 1000 ? (distanceInMeters / 1000).toFixed(2) + ' km' : distanceInMeters.toFixed(0) + ' meters';
+
+                                // Get duration in seconds and add it to the total duration
+                                const durationInSeconds = step.time;
+                                totalDuration += durationInSeconds;
+
+                                // Convert duration to minutes
+                                const durationInMinutes = Math.ceil(durationInSeconds / 60);
+
+                                const instructionText = `${index + 1}. ${step.text}. Distance: ${distanceText}. Time: ${durationInMinutes} minutes`;
+
+                                instructionRow.innerHTML = `<td>${index + 1}.</td><td>${step.text}</td><td>${distanceText}</td><td>${durationInMinutes} min</td>`;
+                                instructionsTable.appendChild(instructionRow);
+
+                                // Add a 'Speak' button to each instruction row
+                                const speakButton = document.createElement('button');
+                                speakButton.textContent = 'Speak';
+                                speakButton.className = "btn btn-primary"; // Apply Bootstrap classes
+                                speakButton.addEventListener('click', () => {
+                                    // Use the Web Speech API to speak the instruction with a delay
+                                    setTimeout(() => {
+                                        const speechSynthesis = window.speechSynthesis;
+                                        const speechUtterance = new SpeechSynthesisUtterance(instructionText);
+                                        speechSynthesis.speak(speechUtterance);
+                                    }, index * 1000); // Delay each instruction by 1 second (adjust as needed)
+                                });
+                                instructionRow.appendChild(speakButton);
+
+                                // Add distance to the total distance
+                                totalDistance += distanceInMeters;
+                            }
                         });
-                        instructionRow.appendChild(speakButton);
+                    } else {
+                        console.error('No instructions found');
                     }
-                });
-            } else {
-                console.error('Route geometry is undefined.');
-            }
-        } else {
-            console.error('Route geometry or coordinates are missing or undefined.');
-        }
-    } else {
-        console.error('No route found.');
-    }
-})
-.catch(error => {
-    console.error('Error getting directions:', error);
-});
-// ...
 
+                    // Calculate total distance in kilometers
+                    const totalDistanceInKilometers = (totalDistance / 1000).toFixed(2);
+
+                    // Calculate total duration in hours
+                    const totalDurationInHours = (totalDuration / 3600).toFixed(2);
+
+                    // Create a row for total distance and total duration in the instructions table
+                    const totalRow = document.createElement('tr');
+                    totalRow.innerHTML = `<td colspan="2">Total:</td><td>${totalDistanceInKilometers} km</td><td>${totalDurationInHours} hours</td>`;
+                    instructionsTable.appendChild(totalRow);
+
+                } else {
+                    console.error('Invalid API RESPONSE: ', data);
+                }
+            })
+            .catch(error => {
+                console.error('Error getting directions:', error);
+            });
     } else {
         alert("Please provide both origin and destination.");
     }
@@ -135,7 +156,7 @@ function getCurrentLocation() {
             var lat = position.coords.latitude;
             var lon = position.coords.longitude;
             currentLocation = [lat, lon];
-            
+
             // Remove the previous pan if it exists
             if (currentLocationMarker) {
                 map.removeLayer(currentLocationMarker);
@@ -155,13 +176,9 @@ function getCurrentLocation() {
     }
 }
 
-
-
 // Combined function to create a red polyline, display instructions, and show marker
 function createRedPolylineDisplayInstructionsAndMarker(destination) {
     if (currentLocation && destination) {
-
-
         // Display turn-by-turn instructions
         displayInstructions(currentLocation, destination);
 
@@ -172,10 +189,8 @@ function createRedPolylineDisplayInstructionsAndMarker(destination) {
     }
 }
 
-
 // Call getCurrentLocation() when the page loads
 window.addEventListener('load', getCurrentLocation);
-
 
 // Function to repeatedly get the current location every 5 seconds
 function repeatGetCurrentLocation() {
@@ -183,14 +198,14 @@ function repeatGetCurrentLocation() {
 }
 
 // Call repeatGetCurrentLocation() when the page loads
-window.addEventListener('load', repeatGetCurrentLocation);
+//window.addEventListener('load', repeatGetCurrentLocation);
 
 // Event listener for the "Create Red Polyline and Display Instructions" button
 document.getElementById("calculateInstructionsButton").addEventListener("click", function () {
     // Get the selected option from the dropdown
     const destinationSelect = document.getElementById("destinationSelect");
     const selectedOption = destinationSelect.options[destinationSelect.selectedIndex];
-    
+
     if (selectedOption) {
         const destinationCoordinates = selectedOption.value.split(',').map(parseFloat);
         if (currentLocation) {
@@ -198,7 +213,7 @@ document.getElementById("calculateInstructionsButton").addEventListener("click",
             destinationMarkers.clearLayers();
             map.eachLayer(function (layer) {
                 if (layer instanceof L.Polyline) {
-                    map.removeLayer(layer);
+                    layer.remove();
                 }
             });
 
@@ -210,7 +225,6 @@ document.getElementById("calculateInstructionsButton").addEventListener("click",
         alert("Please select a destination from the dropdown.");
     }
 });
-
 
 // Event listener for the "Speak Instructions" button
 document.getElementById("speakInstructionsButton").addEventListener("click", function () {
