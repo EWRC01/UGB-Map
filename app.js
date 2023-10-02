@@ -111,10 +111,10 @@ function displayInstructions(origin, destination) {
                     }
 
                     // Calculate total distance in kilometers
-                    const totalDistanceInKilometers = (totalDistance/100).toFixed(2);
+                    const totalDistanceInKilometers = (totalDistance).toFixed(2);
 
                     // Calculate total duration in hours
-                    const totalDurationInHours = (totalDuration/100/60).toFixed(2);
+                    const totalDurationInHours = (totalDuration/1000/60).toFixed(2);
 
                     // Create a row for total distance and total duration in the instructions table
                     const totalRow = document.createElement('tr');

@@ -26,8 +26,7 @@
       <br id="controls" class="bg-light p-3 rounded">
       <!-- Add the "Get Current Location" button -->
       <button id="getCurrentLocationButton" style="background-color: #243482;color: white;"  class="btn" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Obten mi ubicacion actual"><i  class="fa-solid fa-location-crosshairs"></i></button>
-      <!-- Add buttons for "Show Location" and "Calculate Instructions" -->
-      <button id="calculateInstructionsButton" style="background-color: #9f281c;color: white;"  class="btn" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Calcular la ruta hacia el destino"><i class="fa-solid fa-route"></i></button>
+     
       <button id="speakInstructionsButton" style="background-color: #000; color: white;" class="btn" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Lee las instrucciones en voz alta"><i class="fa-solid fa-volume-high"></i></button>
       <hr/>
 
@@ -39,12 +38,18 @@
           <option value="13.48850,-88.19343">Laboratorio Dennis Ritchie</option>
           <option value="13.4886243,-88.1936105">Edificio Innova</option>
           <option value="13.4886574,-88.1938024">Edificio Juan Jose Cañas</option>
+          <option value="13.4899429, -88.1932562">Edificio Hugo Lindo</option>
+          <option value="13.4901249, -88.1934648">Edificio Gerardo Barrios</option>
           <!-- Add more options as needed -->
       </select>
       
       <!-- Button to open instructions modal -->
       <br/>
-      <button type="button" data-bs-toggle="modal" style="background-color: #9f281c;color: white;" data-bs-target="#exampleModal" class="btn">Ver instrucciones</button>
+       <!-- Add buttons for "Show Location" and "Calculate Instructions" -->
+       <button id="calculateInstructionsButton" style="background-color: #9f281c;color: white;"  class="btn" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Calcular la ruta hacia el destino"><i class="fa-solid fa-route"> </i> Calcular Ruta</button>
+       <br/>
+       <br/>
+      <button type="button" data-bs-toggle="modal" style="background-color: #9f281c;color: white;" data-bs-target="#exampleModal" class="btn"><i class="fa-solid fa-arrow-left"></i> Ver instrucciones</button>
       </div>
   </div>
 </div>
