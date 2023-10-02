@@ -56,17 +56,11 @@ function displayInstructions(origin, destination) {
             .then(data => {
                 if (data.paths && data.paths.length > 0) {
                     const path = data.paths[0];
-                    
-                    //const routeCoordinates = path.points.coordinates.map(coord => [coord[1], coord[0]]);
 
-                    console.log(path)
                     const routeCoordinates = path.points.coordinates.map(coord => [coord[1], coord[0]]);
-                    var route = L.polyline(routeCoordinates, { color: 'red' }); // Change color to blue
+                    var route = L.polyline(routeCoordinates, { color: 'purple' }); // Change color to blue
                     route.addTo(map);
                     map.setZoom(15);
-                    
-                
-                    
 
                     // Inside the displayInstructions function
                     const instructionsTable = document.getElementById("instructionsTable");
@@ -80,23 +74,23 @@ function displayInstructions(origin, destination) {
                             if (step.text) {
                                 const instructionRow = document.createElement('tr');
                                 const distanceInMeters = step.distance;
-                                const distanceText = distanceInMeters >= 1000 ? (distanceInMeters / 1000).toFixed(2) + ' km' : distanceInMeters.toFixed(0) + ' meters';
+                                const distanceText = distanceInMeters.toFixed(0) + ' Metros';
 
                                 // Get duration in seconds and add it to the total duration
                                 const durationInSeconds = step.time;
                                 totalDuration += durationInSeconds;
 
                                 // Convert duration to minutes
-                                const durationInMinutes = Math.ceil(durationInSeconds / 60);
+                                const durationInMinutes = Math.ceil(durationInSeconds/1000/60);
 
-                                const instructionText = `${index + 1}. ${step.text}. Distance: ${distanceText}. Time: ${durationInMinutes} minutes`;
+                                const instructionText = `${index + 1}. ${step.text}. Distancia: ${distanceText}. Tiempo: ${durationInMinutes} Minutos`;
 
-                                instructionRow.innerHTML = `<td>${index + 1}.</td><td>${step.text}</td><td>${distanceText}</td><td>${durationInMinutes} min</td>`;
+                                instructionRow.innerHTML = `<td>${index + 1}.</td><td>${step.text}</td><td>${distanceText}</td><td>${durationInMinutes} Minutos</td>`;
                                 instructionsTable.appendChild(instructionRow);
 
                                 // Add a 'Speak' button to each instruction row
                                 const speakButton = document.createElement('button');
-                                speakButton.textContent = 'Speak';
+                                speakButton.textContent = 'Repetir';
                                 speakButton.className = "btn btn-primary"; // Apply Bootstrap classes
                                 speakButton.addEventListener('click', () => {
                                     // Use the Web Speech API to speak the instruction with a delay
@@ -117,14 +111,14 @@ function displayInstructions(origin, destination) {
                     }
 
                     // Calculate total distance in kilometers
-                    const totalDistanceInKilometers = (totalDistance / 1000).toFixed(2);
+                    const totalDistanceInKilometers = (totalDistance/100).toFixed(2);
 
                     // Calculate total duration in hours
-                    const totalDurationInHours = (totalDuration / 3600).toFixed(2);
+                    const totalDurationInHours = (totalDuration/100/60).toFixed(2);
 
                     // Create a row for total distance and total duration in the instructions table
                     const totalRow = document.createElement('tr');
-                    totalRow.innerHTML = `<td colspan="2">Total:</td><td>${totalDistanceInKilometers} km</td><td>${totalDurationInHours} hours</td>`;
+                    totalRow.innerHTML = `<td colspan="2">Total:</td><td>${totalDistanceInKilometers} Metros</td><td>${totalDurationInHours} Minutos</td>`;
                     instructionsTable.appendChild(totalRow);
 
                 } else {
@@ -138,6 +132,7 @@ function displayInstructions(origin, destination) {
         alert("Please provide both origin and destination.");
     }
 }
+
 
 
 

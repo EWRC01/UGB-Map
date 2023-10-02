@@ -1,6 +1,60 @@
-/* Add Bootstrap styles here */
-
-#map {
-    height: 500px; /* Add a specific height to the map container */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
+#map {
+    height:100%; /* Adjust for the height of the button and modal header */
+    z-index: 0;
+    position: sticky;
+}
+
+/* Define the sidebar styles */
+.sidebar {
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    top: 0;
+    right: -250px; /* Adjust for the width of the sidebar */
+    background-color: #131a41;
+    overflow-x: hidden;
+    transition: 0.3s;
+    padding-top: 20px;
+    z-index: 2;
+}
+
+.sidebar.show {
+    right: 0;
+}
+
+.sidebar.hide {
+    right: -250px; /* Adjust for the width of the sidebar */
+}
+
+/* Style the sidebar links/buttons */
+.sidebar a {
+    padding: 10px 15px;
+    text-align: left;
+    text-decoration: none;
+    font-size: 18px;
+    color: #333;
+    display: block;
+    transition: 0.2s;
+}
+
+.sidebar a:hover {
+    color: #007bff;
+}
+
+#toggleSidebar {
+    z-index: 8;
+    position: absolute;
+    top: 0;
+    right: 0; /* Position the button on the top right corner */
+}
+
+/* Style for the modal */
+#instructionsModal {
+    z-index: 3; /* Ensure it's above the sidebar */
+}
