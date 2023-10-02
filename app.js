@@ -58,7 +58,7 @@ function displayInstructions(origin, destination) {
                     const path = data.paths[0];
 
                     const routeCoordinates = path.points.coordinates.map(coord => [coord[1], coord[0]]);
-                    var route = L.polyline(routeCoordinates, { color: 'purple' }); // Change color to blue
+                    var route = L.polyline(routeCoordinates, { color: 'rgb(159, 40, 28)' }); // Change color to blue
                     route.addTo(map);
                     map.setZoom(15);
 
@@ -91,7 +91,7 @@ function displayInstructions(origin, destination) {
                                 // Add a 'Speak' button to each instruction row
                                 const speakButton = document.createElement('button');
                                 speakButton.textContent = 'Repetir';
-                                speakButton.className = "btn btn-primary"; // Apply Bootstrap classes
+                                speakButton.className = "btn btn-dark"; // Apply Bootstrap classes
                                 speakButton.addEventListener('click', () => {
                                     // Use the Web Speech API to speak the instruction with a delay
                                     setTimeout(() => {
@@ -163,7 +163,7 @@ function getCurrentLocation() {
             }
             var myIcon = L.icon({
                 iconUrl: './imgs/persona.png',
-                iconSize: [50, 50],
+                iconSize: [80, 80],
                 iconAnchor: [30, 30],
             });
             // Create a new marker for the current location
