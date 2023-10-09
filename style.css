@@ -101,3 +101,18 @@ html, body {
 .leaflet-layer {
     filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
 }
+ /* Dark modal background */
+.modal-content {
+    background-color: #333 !important ; /* Dark background color for the modal */
+    color: #fff !important ; /* Light text color for the modal content */
+}
+
+/* Close button color */
+.modal-header .btn-close {
+    color: #fff !important ; /* Light color for the close button */
+}
+
+#instructionsTable {
+    color: white;
+}
+   

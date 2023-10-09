@@ -36,8 +36,10 @@ function displayInstructions(origin, destination) {
                                 const durationInMinutes = Math.ceil(durationInSeconds / 1000 / 60);
 
                                 const instructionText = `${index + 1}. ${step.text}. Distancia: ${distanceText}. Tiempo: ${durationInMinutes} Minutos`;
+                                instructionText.className = "text-light"
 
                                 instructionRow.innerHTML = `<td>${index + 1}.</td><td>${step.text}</td><td>${distanceText}</td><td>${durationInMinutes} Minutos</td>`;
+                                instructionRow.className= "text-light"
                                 instructionsTable.appendChild(instructionRow);
 
                                 const speakButton = document.createElement('button');
