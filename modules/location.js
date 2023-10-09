@@ -9,7 +9,7 @@ function getCurrentLocation() {
                 map.removeLayer(currentLocationMarker);
             }
             var myIcon = L.icon({
-                iconUrl: './imgs/persona.png',
+                iconUrl: './imgs/origin.png',
                 iconSize: [80, 80],
                 iconAnchor: [30, 30],
             });
