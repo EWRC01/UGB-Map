@@ -17,7 +17,7 @@
 
             map.panTo(new L.LatLng(lat, lon), 12);
         }, function (error) {
-            console.error("Error getting location:", error.message);
+            alert.error("Error getting location:", error.message);
         });
     } else {
         alert("Geolocation is not supported in this browser.");
