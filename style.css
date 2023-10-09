@@ -98,3 +98,6 @@ html, body {
     color: white !important; /* Change the text color if needed */
 }
 
+.leaflet-layer {
+    filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
