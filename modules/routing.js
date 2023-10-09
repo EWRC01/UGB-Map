@@ -13,7 +13,7 @@ function displayInstructions(origin, destination) {
                     const path = data.paths[0];
 
                     const routeCoordinates = path.points.coordinates.map(coord => [coord[1], coord[0]]);
-                    var route = L.polyline(routeCoordinates, { color: 'rgb(159, 40, 28)' });
+                    var route = L.polyline(routeCoordinates, { color: 'rgb(255, 255, 255)' });
                     route.addTo(map);
                     map.setZoom(15);
 
