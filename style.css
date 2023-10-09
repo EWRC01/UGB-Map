@@ -58,3 +58,43 @@ html, body {
 #instructionsModal {
     z-index: 3; /* Ensure it's above the sidebar */
 }
+
+
+
+/* Style the base layers container */
+.leaflet-control-layers-base {
+    background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* Style the base layer labels */
+.leaflet-control-layers-base label {
+    display: block;
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+
+/* Style the checked base layer label */
+.leaflet-control-layers-base label.checked {
+    font-weight: bold;
+}
+
+/* Style the over label when hovering */
+.leaflet-control-layers-base label:hover {
+    background-color: #f5f5f5;
+    border-radius: 3px;
+}
+
+/* Change the background color of the layerControl buttons */
+.leaflet-control-layers-toggle {
+    background-color: #131a41;
+}
+
+/* Change the background color of the zoom buttons */
+.leaflet-bar a.leaflet-control-zoom-in,
+.leaflet-bar a.leaflet-control-zoom-out {
+    background-color:#131a41  !important; /* Change this to your desired color */
+    color: white !important; /* Change the text color if needed */
+}
+
