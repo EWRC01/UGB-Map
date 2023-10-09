@@ -1,6 +1,4 @@
-var routePolyline = null;
-
-function displayInstructions(origin, destination) {
+function displayInstructions(origin, destination, isDarkTheme) {
     if (origin && destination) {
         const profile = 'foot';
         const language = 'es';
@@ -13,9 +11,8 @@ function displayInstructions(origin, destination) {
                     const path = data.paths[0];
 
                     const routeCoordinates = path.points.coordinates.map(coord => [coord[1], coord[0]]);
-                    var route = L.polyline(routeCoordinates, { color: 'rgb(255, 255, 255)' });
+                    var route = L.polyline(routeCoordinates, { color: isDarkTheme ? 'white' : 'black' });
                     route.addTo(map);
-                    map.setZoom(15);
 
                     const instructionsTable = document.getElementById("instructionsTable");
                     instructionsTable.innerHTML = '';
@@ -36,10 +33,8 @@ function displayInstructions(origin, destination) {
                                 const durationInMinutes = Math.ceil(durationInSeconds / 1000 / 60);
 
                                 const instructionText = `${index + 1}. ${step.text}. Distancia: ${distanceText}. Tiempo: ${durationInMinutes} Minutos`;
-                                instructionText.className = "text-light"
 
                                 instructionRow.innerHTML = `<td>${index + 1}.</td><td>${step.text}</td><td>${distanceText}</td><td>${durationInMinutes} Minutos</td>`;
-                                instructionRow.className= "text-light"
                                 instructionsTable.appendChild(instructionRow);
 
                                 const speakButton = document.createElement('button');
@@ -58,7 +53,12 @@ function displayInstructions(origin, destination) {
                             }
                         });
                     } else {
-                        console.error('No instructions found');
+                        // Use SweetAlert for the error message
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'No instructions found',
+                        });
                     }
 
                     const totalDistanceInKilometers = (totalDistance).toFixed(2);
@@ -69,13 +69,28 @@ function displayInstructions(origin, destination) {
                     instructionsTable.appendChild(totalRow);
 
                 } else {
-                    console.error('Invalid API RESPONSE: ', data);
+                    // Use SweetAlert for the error message
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Invalid API RESPONSE',
+                    });
                 }
             })
             .catch(error => {
-                console.error('Error getting directions:', error);
+                // Use SweetAlert for the error message
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Error getting directions: ' + error,
+                });
             });
     } else {
-        alert("Please provide both origin and destination.");
+        // Use SweetAlert for the error message
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Please provide both origin and destination.',
+        });
     }
 }

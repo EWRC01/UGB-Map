@@ -98,11 +98,25 @@ html, body {
     color: white !important; /* Change the text color if needed */
 }
 
-.leaflet-layer {
+
+
+/* Dark and Ligh Theme rules */
+
+.ligh-theme .leaflet-layer {
+    filter: none;
+}
+
+.dark-theme .leaflet-layer {
     filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
 }
  /* Dark modal background */
-.modal-content {
+
+ .dark-theme .modal-content {
+    background-color: #fff !important ; /* Dark background color for the modal */
+    color: #000 !important ; /* Light text color for the modal content */
+}
+
+.dark-theme .modal-content {
     background-color: #333 !important ; /* Dark background color for the modal */
     color: #fff !important ; /* Light text color for the modal content */
 }
@@ -112,7 +126,50 @@ html, body {
     color: #fff !important ; /* Light color for the close button */
 }
 
-#instructionsTable {
+.dark-theme #instructionsTable {
     color: white;
 }
+
+.light-theme #instructionsTable {
+    color: black;
+}
    
+
+
+.checkbox {
+    opacity: 0;
+    position: absolute;
+}
+  
+.checkbox-label {
+    background-color: #111;
+    width: 50px;
+    height: 26px;
+    border-radius: 50px;
+    position: relative;
+    padding: 5px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+  
+.fa-moon {color: #f1c40f;}
+  
+.fa-sun {color: #f39c12;}
+  
+.checkbox-label .ball {
+    background-color: #fff;
+    width: 22px;
+    height: 22px;
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    border-radius: 50%;
+    transition: transform 0.2s linear;
+}
+  
+.checkbox:checked + .checkbox-label .ball {
+    transform: translateX(24px);
+}
+  

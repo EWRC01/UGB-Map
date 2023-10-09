@@ -1,4 +1,4 @@
- function getCurrentLocation() {
+function getCurrentLocation() {
     if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(function (position) {
             var lat = position.coords.latitude;
@@ -17,10 +17,19 @@
 
             map.panTo(new L.LatLng(lat, lon), 12);
         }, function (error) {
-            alert.error("Error getting location:", error.message);
+            // Use SweetAlert to display the error message
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Error getting location: ' + error.message,
+            });
         });
     } else {
-        alert("Geolocation is not supported in this browser.");
+        // Use SweetAlert to display the error message
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Geolocation is not supported in this browser.',
+        });
     }
 }
-
