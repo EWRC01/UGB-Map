@@ -1,16 +1,18 @@
+/* Reset some default styles */
 html, body {
     height: 100%;
     margin: 0;
     padding: 0;
 }
 
+/* Map container styles */
 #map {
-    height:100%; /* Adjust for the height of the button and modal header */
+    height: 100%; /* Adjust for the height of the button and modal header */
     z-index: 0;
     position: sticky;
 }
 
-/* Define the sidebar styles */
+/* Sidebar styles */
 .sidebar {
     height: 100%;
     width: 250px;
@@ -32,7 +34,7 @@ html, body {
     right: -250px; /* Adjust for the width of the sidebar */
 }
 
-/* Style the sidebar links/buttons */
+/* Sidebar links/buttons styles */
 .sidebar a {
     padding: 10px 15px;
     text-align: left;
@@ -47,6 +49,7 @@ html, body {
     color: #007bff;
 }
 
+/* Toggle Sidebar button styles */
 #toggleSidebar {
     z-index: 8;
     position: absolute;
@@ -54,78 +57,95 @@ html, body {
     right: 0; /* Position the button on the top right corner */
 }
 
-/* Style for the modal */
+/* Modal styles */
 #instructionsModal {
     z-index: 3; /* Ensure it's above the sidebar */
 }
 
-
-
-/* Style the base layers container */
+/* Base layers container styles */
 .leaflet-control-layers-base {
     background-color: white;
     padding: 10px;
     border-radius: 5px;
 }
 
-/* Style the base layer labels */
+/* Dark theme base layers container styles */
+.dark-theme .leaflet-control-layers-base {
+    background-color: black;
+    padding: 10px;
+    border-radius: 5px;
+    color: white;
+}
+
+/* Base layer label styles */
 .leaflet-control-layers-base label {
     display: block;
     margin-bottom: 5px;
     cursor: pointer;
 }
 
-/* Style the checked base layer label */
+/* Checked base layer label styles */
 .leaflet-control-layers-base label.checked {
     font-weight: bold;
 }
 
-/* Style the over label when hovering */
+/* Hovered base layer label styles */
 .leaflet-control-layers-base label:hover {
     background-color: #f5f5f5;
     border-radius: 3px;
 }
 
-/* Change the background color of the layerControl buttons */
-.leaflet-control-layers-toggle {
-    background-color: #131a41;
+/* Hovered base layer label styles in dark theme */
+.dark-theme .leaflet-control-layers-base label:hover {
+    background-color: #000;
+    border-radius: 3px;
 }
 
-/* Change the background color of the zoom buttons */
+/* Layer Control button styles */
+.leaflet-control-layers-toggle {
+    background-color: #fff;
+}
+
+/* Dark theme Layer Control button styles */
+.dark-theme .leaflet-control-layers-toggle {
+    background-color: #000;
+}
+
+/* Zoom button styles */
 .leaflet-bar a.leaflet-control-zoom-in,
 .leaflet-bar a.leaflet-control-zoom-out {
-    background-color:#131a41  !important; /* Change this to your desired color */
+    background-color: #fff !important; /* Change this to your desired color */
+    color: black !important; /* Change the text color if needed */
+}
+
+/* Zoom button styles in dark theme */
+.dark-theme .leaflet-bar a.leaflet-control-zoom-in,
+.dark-theme .leaflet-bar a.leaflet-control-zoom-out {
+    background-color: black !important; /* Change this to your desired color */
     color: white !important; /* Change the text color if needed */
 }
 
-
-
-/* Dark and Ligh Theme rules */
-
-.ligh-theme .leaflet-layer {
+/* Dark and Light Theme rules */
+.light-theme .leaflet-layer {
     filter: none;
 }
 
 .dark-theme .leaflet-layer {
     filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
 }
- /* Dark modal background */
 
- .dark-theme .modal-content {
-    background-color: #fff !important ; /* Dark background color for the modal */
-    color: #000 !important ; /* Light text color for the modal content */
-}
-
+/* Dark modal background */
 .dark-theme .modal-content {
-    background-color: #333 !important ; /* Dark background color for the modal */
-    color: #fff !important ; /* Light text color for the modal content */
+    background-color: #333 !important; /* Dark background color for the modal */
+    color: #fff !important; /* Light text color for the modal content */
 }
 
 /* Close button color */
 .modal-header .btn-close {
-    color: #fff !important ; /* Light color for the close button */
+    color: #fff !important; /* Light color for the close button */
 }
 
+/* Instructions table text color */
 .dark-theme #instructionsTable {
     color: white;
 }
@@ -133,14 +153,13 @@ html, body {
 .light-theme #instructionsTable {
     color: black;
 }
-   
 
-
+/* Toggle switch styles */
 .checkbox {
     opacity: 0;
     position: absolute;
 }
-  
+
 .checkbox-label {
     background-color: #111;
     width: 50px;
@@ -153,11 +172,15 @@ html, body {
     justify-content: space-between;
     align-items: center;
 }
-  
-.fa-moon {color: #f1c40f;}
-  
-.fa-sun {color: #f39c12;}
-  
+
+.fa-moon {
+    color: #f1c40f;
+}
+
+.fa-sun {
+    color: #f39c12;
+}
+
 .checkbox-label .ball {
     background-color: #fff;
     width: 22px;
@@ -168,8 +191,7 @@ html, body {
     border-radius: 50%;
     transition: transform 0.2s linear;
 }
-  
+
 .checkbox:checked + .checkbox-label .ball {
     transform: translateX(24px);
 }
-  
