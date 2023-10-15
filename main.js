@@ -5,6 +5,9 @@ window.addEventListener('load', getCurrentLocation);
 // Event listener for the "Get Current Location" button (this remains the same)
 document.getElementById("getCurrentLocationButton").addEventListener("click", getCurrentLocation);
 
+
+  
+
 // Get the theme toggle button and body element
 const themeToggle = document.getElementById('checkbox');
 const bodyElement = document.body;
@@ -55,6 +58,7 @@ document.getElementById("calculateInstructionsButton").addEventListener("click",
     }
 
     if (selectedOption) {
+        toggleSidebar();
         destinationCoordinates = selectedOption.value.split(',').map(parseFloat);
         if (currentLocation) {
             destinationMarkers.clearLayers();
