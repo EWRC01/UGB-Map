@@ -2,11 +2,14 @@
 
 window.addEventListener('load', getCurrentLocation);
 
+// Initialize a counter to keep track of the number of times 'Calculate Instructions' is clicked
+let calculateInstructionsClickCount = 0;
+
 // Event listener for the "Get Current Location" button (this remains the same)
 document.getElementById("getCurrentLocationButton").addEventListener("click", getCurrentLocation);
 
 
-  
+
 
 // Get the theme toggle button and body element
 const themeToggle = document.getElementById('checkbox');
@@ -45,6 +48,7 @@ if (savedTheme === 'dark') {
 // ...
 // Event listener for the "Calculate Instructions" button
 document.getElementById("calculateInstructionsButton").addEventListener("click", function () {
+    calculateInstructionsClickCount++;
     const destinationSelect = document.getElementById("destinationSelect");
     const selectedOption = destinationSelect.options[destinationSelect.selectedIndex];
     
@@ -86,4 +90,61 @@ document.getElementById("calculateInstructionsButton").addEventListener("click",
         });
     }
 });
+
+
+
+
+// Function to enable/disable buttons based on combobox selection
+function handleComboBoxChange() {
+    const selectElement = document.getElementById('destinationSelect');
+    const calculateButton = document.getElementById('reloadLocationButton');
+    const speakButton = document.getElementById('speakInstructionsButton');
+
+    if (selectElement.value == 'default') {
+        calculateButton.disabled = true;
+        speakButton.disabled = true;
+        calculateInstructionsClickCount = 0; // Reset the click count when default option is selected
+    } else {
+        calculateButton.disabled = false;
+        speakButton.disabled = false;
+        
+       
+    }
+}
+
+// Add an event listener to the combobox to handle changes
+document.getElementById('destinationSelect').addEventListener('change', handleComboBoxChange);
+
+reloadInstructionsButton = document.getElementById("reloadLocationButton");
+getCurrentLocationButton = document.getElementById("getCurrentLocationButton");
+calculateInstructionsButton = document.getElementById("calculateInstructionsButton");
+
+function reloadInstructions(e) {
+    e.preventDefault();
+
+    Swal.fire({
+        icon: 'success',
+        title: 'Éxito',
+        text: 'Esta a punto de reiniciar las instrucciones',
+        showCancelButton: true, // Display a cancel button
+        confirmButtonText: 'OK', // Text for the OK button
+        cancelButtonText: 'Cancel', // Text for the Cancel button
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // If the user clicks "OK," perform these actions
+            getCurrentLocationButton.click();
+            calculateInstructionsButton.click();
+        } else if (result.isDismissed) {
+            // If the user clicks "Cancel" or closes the SweetAlert without choosing an option, you can handle that here.
+            // You can choose to do nothing or any other action as needed.
+        }
+    });
+}
+
+
+
+reloadInstructionsButton.addEventListener("click", reloadInstructions, false);
+
+
+
 // ...
