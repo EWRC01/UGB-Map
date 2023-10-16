@@ -146,6 +146,12 @@ function reloadInstructions(e) {
 reloadInstructionsButton.addEventListener("click", reloadInstructions, false);
 
 document.getElementById("speakInstructionsButton").addEventListener("click", function () {
+    const greetingsSpeech = "Bienvenido a UGB Maps, sere tu guia virtual, a continuación te diré las instrucciones:"
+    const speechSynthesis2 = window.speechSynthesis;
+    const speechUtterance2 = new SpeechSynthesisUtterance(greetingsSpeech);
+    speechUtterance2.lang='es-US';
+    speechSynthesis2.speak(speechUtterance2)
+
     const instructionsTable = document.getElementById("instructionsTable");
     const speakButtons = instructionsTable.querySelectorAll("button");
 
