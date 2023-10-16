@@ -145,6 +145,15 @@ function reloadInstructions(e) {
 
 reloadInstructionsButton.addEventListener("click", reloadInstructions, false);
 
+document.getElementById("speakInstructionsButton").addEventListener("click", function () {
+    const instructionsTable = document.getElementById("instructionsTable");
+    const speakButtons = instructionsTable.querySelectorAll("button");
+
+    speakButtons.forEach(function (speakButton) {
+        speakButton.click();
+    });
+});
+
 
 
 // ...
