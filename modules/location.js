@@ -1,3 +1,7 @@
+var map;
+var currentLocationMarker;
+var currentLocation = [0, 0];
+
 function getCurrentLocation() {
     if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(function (position) {
@@ -8,16 +12,21 @@ function getCurrentLocation() {
             if (currentLocationMarker) {
                 map.removeLayer(currentLocationMarker);
             }
-            var myIcon = L.icon({
-                iconUrl: './imgs/origin.png',
-                iconSize: [80, 80],
-                iconAnchor: [30, 30],
+
+            // Define a custom HTML structure for the icon (only the Font Awesome icon)
+            var myIcon = L.AwesomeMarkers.icon({
+                prefix: 'fa',
+                icon : 'person-walking',
+                markerColor: 'red',
             });
-            currentLocationMarker = L.marker(currentLocation, { icon: myIcon, title: 'Origen', alt: 'Origen' }).addTo(map);
+
+            // Create a marker with the custom icon and add it to the map
+            currentLocationMarker = L.marker(currentLocation, {icon: myIcon,}).addTo(map);
 
             map.panTo(new L.LatLng(lat, lon), 12);
+
         }, function (error) {
-            // Use SweetAlert to display the error message
+            // Handle geolocation errors
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
@@ -25,7 +34,7 @@ function getCurrentLocation() {
             });
         });
     } else {
-        // Use SweetAlert to display the error message
+        // Handle browsers that don't support geolocation
         Swal.fire({
             icon: 'error',
             title: 'Error',
