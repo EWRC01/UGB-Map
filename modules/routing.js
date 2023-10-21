@@ -62,7 +62,7 @@ function displayInstructions(origin, destination, isDarkTheme) {
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
-                            text: 'No instructions found',
+                            text: 'No se encontro una ruta para el edificio',
                         });
                     }
 
@@ -86,7 +86,7 @@ function displayInstructions(origin, destination, isDarkTheme) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'Error getting directions: ' + error,
+                    text: 'Error obteniendo las direcciones: ' + error,
                 });
             });
     } else {
@@ -94,7 +94,7 @@ function displayInstructions(origin, destination, isDarkTheme) {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: 'Please provide both origin and destination.',
+            text: 'Por favor provee un origen y un destino',
         });
     }
 }

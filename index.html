@@ -69,7 +69,9 @@
         <i class="fas fa-sun"></i>
         <span class="ball"></span>
       </label>
+      
     </center>
+    <footer><a href="#registerLocationModal" data-bs-toggle="modal" style="position: fixed;bottom: 0;">Quieres registrar un nuevo edificio?</a></footer>
   </div>
 </div>
 
@@ -102,6 +104,52 @@
     </div>
 </div>
 
+<!-- Add this code to your index.html -->
+<div class="modal fade" id="registerLocationModal" tabindex="-1" aria-labelledby="registerLocationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="registerLocationModalLabel">Registrar Nuevo Edificio</h5>
+                <button type="button"  class="btn btn-danger" data-bs-dismiss="modal" aria-label="Cerrar">Cerrar</button>
+                    
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+
+        
+                    <div class="row">
+                        <div class="col-lg-6 offset-lg-3">
+                            <div class="form-group">
+                                
+                            <form id="locationForm">
+                                <div class="mb-3">
+                                    <label for="locationName" class="form-label">Nombre del edificio:</label>
+                                    <input type="text" class="form-control" id="locationName" required>
+                                </div>
+                                <div class="mb-3">
+                                    
+                                    <label for="locationCoordinates" class="form-label">Coordenadas: (e.g., 13.48850,-88.19343)</label>
+                                    <button id="getCurrentLocationButton1" type="button" class="btn btn-danger">Obten mi ubicacion actual <i class="fa-solid fa-location-crosshairs"></i></button>
+                                    <br><br/>
+                                    
+                                    <input type="text" class="form-control" id="locationCoordinates" required>
+                                </div>
+                                <button id="registerLocation" type="submit" class="btn btn-primary">Registrar</button>
+                            </div>
+                            
+                            </form>
+                        </div>
+                    </div>
+              
+        
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <!-- Content -->
 <div id="content" style="height: 100%;width: 100%;display: flex;">
     <!-- Toggle button to show/hide sidebar -->
@@ -121,6 +169,7 @@
 <script src="./modules/location.js"></script>
 <script src="./modules/jsonLoad.js"></script>
 <script src="./modules/tooltip.js"></script>
+<script src="./modules/register.js"></script>
 <script src="main.js"></script>
 
 </html>
