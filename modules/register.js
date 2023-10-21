@@ -107,12 +107,17 @@ async function updateJsonData(event) {
     optionsInStorage.push(buildingJSON);
     localStorage.setItem('buildingOptions', JSON.stringify(optionsInStorage));
 
-    // Show a success alert with SweetAlert
-    Swal.fire({
-        icon: 'success',
-        title: 'Éxito',
-        text: '¡Edificio registrado con éxito!',
-    });
+// Show a success alert with SweetAlert and reload the page when the user clicks OK
+Swal.fire({
+    icon: 'success',
+    title: 'Éxito',
+    text: '¡Edificio registrado con éxito!',
+}).then((result) => {
+    if (result.isConfirmed) {
+        location.reload(); // Reload the page
+    }
+});
+
 }
 
 

@@ -117,37 +117,39 @@
             <div class="modal-body">
                 <div class="container">
 
-        
                     <div class="row">
                         <div class="col-lg-6 offset-lg-3">
                             <div class="form-group">
                                 
-                            <form id="locationForm">
-                                <div class="mb-3">
-                                    <label for="locationName" class="form-label">Nombre del edificio:</label>
-                                    <input type="text" class="form-control" id="locationName" required>
-                                </div>
-                                <div class="mb-3">
-                                    
-                                    <label for="locationCoordinates" class="form-label">Coordenadas: (e.g., 13.48850,-88.19343)</label>
-                                    <button id="getCurrentLocationButton1" type="button" class="btn btn-danger">Obten mi ubicacion actual <i class="fa-solid fa-location-crosshairs"></i></button>
-                                    <br><br/>
-                                    
-                                    <input type="text" class="form-control" id="locationCoordinates" required>
-                                </div>
-                                <button id="registerLocation" type="submit" class="btn btn-primary">Registrar</button>
-                            </div>
-                            
-                            </form>
+                                <form id="locationForm">
+                                    <div class="mb-3">
+                                        <label for="locationName" class="form-label">Nombre del edificio:</label>
+                                        <input type="text" class="form-control" id="locationName" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="locationCoordinates" class="form-label">Coordenadas: (Ejemplo: 13.48850,-88.19343)</label>
+                                        <button id="getCurrentLocationButton1" type="button" class="btn btn-danger">Obten mi ubicacion actual <i class="fa-solid fa-location-crosshairs"></i></button>
+                                        <br><br/>
+                                        <input type="text" class="form-control" id="locationCoordinates" required>
+                                    </div>
+                                </form>
+                            </div>     
                         </div>
                     </div>
-              
-        
+                </div>
             </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <button id="registerLocation" style="background-color: #243482;color: white;" type="button" class="btn">Registrar Edificio <i class="fa-solid fa-plus"></i></button>
+                <hr/>
+                <button id="clearLocalStorage" style="background-color: #243482; color: white;" type="button" class="btn">Limpiar Edificios <i class="fa-solid fa-trash"></i></button>
             </div>
+            
         </div>
+        
     </div>
 </div>
+
+
 
 
 <!-- Content -->
@@ -170,6 +172,7 @@
 <script src="./modules/jsonLoad.js"></script>
 <script src="./modules/tooltip.js"></script>
 <script src="./modules/register.js"></script>
+<script src="./modules/clearStorage.js"></script>
 <script src="main.js"></script>
 
 </html>
