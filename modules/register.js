@@ -29,7 +29,6 @@ function getCurrentLocation1() {
     }
 }
 
-
 // Function to calculate the Haversine distance between two sets of coordinates
 function calculateHaversineDistance(coords1, coords2) {
     const [lat1, lon1] = coords1;
@@ -66,8 +65,23 @@ async function updateJsonData(event) {
 
     // Check if the data already exists in the combined data
     const combinedData = await loadCombinedBuildingData();
-    const isDuplicateName = combinedData.some(location => location.name === locationName);
-    const isDuplicateCoordinates = combinedData.some(location => location.coordinates === locationCoordinates);
+    console.log(combinedData);
+
+    const isDuplicateName = combinedData.some(building => {
+        if (building.name === locationName) {
+            // If the building name matches, check for duplicates within its rooms
+            return building.rooms.some(room => room.name === locationName);
+        }
+        return false; // No match for the building name
+    });
+
+    const isDuplicateCoordinates = combinedData.some(building => {
+        if (building.name === locationName) {
+            // If the building name matches, check for duplicates within its rooms
+            return building.rooms.some(room => room.coordinates === locationCoordinates);
+        }
+        return false; // No match for the building name
+    });
 
     if (isDuplicateName || isDuplicateCoordinates) {
         // Show a SweetAlert alert for duplicate data
@@ -81,11 +95,13 @@ async function updateJsonData(event) {
 
     // Check if the coordinates are too close to existing coordinates
     const minimumDistance = 100; // Minimum distance in meters
-    const isTooClose = combinedData.some(location => {
-        const existingCoords = location.coordinates.split(',').map(parseFloat);
-        const newCoords = locationCoordinates.split(',').map(parseFloat);
-        const distance = calculateHaversineDistance(existingCoords, newCoords);
-        return distance < minimumDistance;
+    const isTooClose = combinedData.some(building => {
+        return building.rooms.some(room => {
+            const existingCoords = room.coordinates.split(',').map(parseFloat);
+            const newCoords = locationCoordinates.split(',').map(parseFloat);
+            const distance = calculateHaversineDistance(existingCoords, newCoords);
+            return distance < minimumDistance;
+        });
     });
 
     if (isTooClose) {
@@ -102,27 +118,36 @@ async function updateJsonData(event) {
         coordinates: locationCoordinates,
     };
 
+    // Add the new building to the "Edificios Personalizados" section with a sample room
+    const customBuilding = {
+        name: "Edificios Personalizados",
+        rooms: [
+    
+        ]
+    };
+    customBuilding.rooms.push({
+        name: locationName,
+        coordinates: locationCoordinates,
+    });
+
     // Save the updated options to Local Storage
     const optionsInStorage = await loadBuildingDataFromLocalStorage();
-    optionsInStorage.push(buildingJSON);
+    optionsInStorage.push(customBuilding);
     localStorage.setItem('buildingOptions', JSON.stringify(optionsInStorage));
 
-// Show a success alert with SweetAlert and reload the page when the user clicks OK
-Swal.fire({
-    icon: 'success',
-    title: 'Éxito',
-    text: '¡Edificio registrado con éxito!',
-}).then((result) => {
-    if (result.isConfirmed) {
-        location.reload(); // Reload the page
-    }
-});
-
+    // Show a success alert with SweetAlert and reload the page when the user clicks OK
+    Swal.fire({
+        icon: 'success',
+        title: 'Éxito',
+        text: '¡Edificio registrado con éxito!',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            location.reload(); // Reload the page
+        }
+    });
 }
-
 
 // Attach the click event handler to the Register button
 document.getElementById("registerLocation").addEventListener("click", updateJsonData);
 // Event listener for the "Get Current Location" button
 document.getElementById("getCurrentLocationButton1").addEventListener("click", getCurrentLocation1);
-
