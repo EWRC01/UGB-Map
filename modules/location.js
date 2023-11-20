@@ -2,8 +2,9 @@ var map;
 var currentLocationMarker;
 var currentLocation = [0, 0];
 var isFirstLocation = true;
+var watchId; // To store the ID returned by watchPosition
 
-function getCurrentLocation() {
+function trackCurrentLocation() {
     if ("geolocation" in navigator) {
         var options = {
             enableHighAccuracy: true,
@@ -11,7 +12,7 @@ function getCurrentLocation() {
             timeout: 5000
         };
 
-        navigator.geolocation.getCurrentPosition(function (position) {
+        watchId = navigator.geolocation.watchPosition(function (position) {
             var lat = position.coords.latitude;
             var lon = position.coords.longitude;
             currentLocation = [lat, lon];
@@ -48,21 +49,19 @@ function getCurrentLocation() {
     }
 }
 
+function centerMapOnMarker() {
+    if (currentLocationMarker) {
+        var latLng = currentLocationMarker.getLatLng();
+        map.setView(latLng, 12);
+    }
+}
+
 window.addEventListener('load', function () {
-    // Initialize your map here
-
-    // Assuming you have initialized your map (map = L.map(...)) here
-
-    // Get current location on page load
-    getCurrentLocation();
+    // Start tracking the current location on page load
+    trackCurrentLocation();
 
     // Event listener for the "Get Current Location" button
     document.getElementById("getCurrentLocationButton").addEventListener("click", function () {
-        // Get current location on button click
-        getCurrentLocation();
-
-        // Center the map on the current location marker
-        var latLng = currentLocationMarker.getLatLng();
-        map.setView(latLng, 12);
+        centerMapOnMarker();
     });
 });
