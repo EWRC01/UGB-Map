@@ -5,11 +5,13 @@ function loadBuildingDataFromLocalStorage() {
     return optionsInStorage;
 }
 
-// Function to combine data from local storage and JavaScript object
 async function loadCombinedBuildingData() {
     const dataFromLocalStorage = loadBuildingDataFromLocalStorage();
-    return [...dataFromLocalStorage, ...buildingsData]; // Combine with the new JavaScript object
+    const combinedData = [...dataFromLocalStorage, ...buildingsData];
+    return Promise.resolve(Array.isArray(combinedData) ? combinedData : []);
 }
+
+
 
 async function populateSelectFromCombinedData() {
     const destinationSelect = document.getElementById('destinationSelect');

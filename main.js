@@ -45,14 +45,16 @@ if (savedTheme === 'dark') {
     bodyElement.classList.add('dark-theme');
 }
 
+
+
+
 // ...
-// Event listener for the "Calculate Instructions" button
-document.getElementById("calculateInstructionsButton").addEventListener("click", function () {
-    calculateInstructionsClickCount++;
+async function handleDestinationSelection() {
     const destinationSelect = document.getElementById("destinationSelect");
     const selectedOption = destinationSelect.options[destinationSelect.selectedIndex];
-    
+
     if (selectedOption.value === "default") {
+        console.log("No building selected");
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -61,35 +63,31 @@ document.getElementById("calculateInstructionsButton").addEventListener("click",
         return; // Exit the function, no need to proceed
     }
 
-    if (selectedOption) {
-        toggleSidebar();
-        destinationCoordinates = selectedOption.value.split(',').map(parseFloat);
-        if (currentLocation) {
-            destinationMarkers.clearLayers();
-            map.eachLayer(function (layer) {
-                if (layer instanceof L.Polyline) {
-                    layer.remove();
-                }
-            });
+    // If not close to any specific room in the building, perform other actions
+    toggleSidebar();
+    destinationCoordinates = selectedOption.value.split(',').map(parseFloat);
+    if (currentLocation) {
+        destinationMarkers.clearLayers();
+        map.eachLayer(function (layer) {
+            if (layer instanceof L.Polyline) {
+                layer.remove();
+            }
+        });
 
-            // Display instructions when both currentLocation and destinationCoordinates are defined
-            updatePolylineColor();
-            showMarkerOnMap(destinationCoordinates);
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Please get your current location first.',
-            });
-        }
+        // Display instructions when both currentLocation and destinationCoordinates are defined
+        updatePolylineColor();
+        showMarkerOnMap(destinationCoordinates);
     } else {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: 'Please select a destination from the dropdown.',
+            text: 'Por favor habilita la geolocalizacion!',
         });
     }
-});
+}
+
+
+
 
 
 
@@ -117,7 +115,12 @@ document.getElementById('destinationSelect').addEventListener('change', handleCo
 
 reloadInstructionsButton = document.getElementById("reloadLocationButton");
 getCurrentLocationButton = document.getElementById("getCurrentLocationButton");
-calculateInstructionsButton = document.getElementById("calculateInstructionsButton");
+// Event listener for the "Calculate Instructions" button
+document.getElementById("calculateInstructionsButton").addEventListener("click", function () {
+    calculateInstructionsClickCount++;
+    handleDestinationSelection();
+});
+
 
 function reloadInstructions(e) {
     e.preventDefault();

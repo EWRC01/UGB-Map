@@ -4,7 +4,15 @@ var currentLocation = [0, 0];
 
 function getCurrentLocation() {
     if ("geolocation" in navigator) {
-            navigator.geolocation.getCurrentPosition(function (position) {
+        // Set options for watchPosition (you can adjust these according to your needs)
+        var options = {
+            enableHighAccuracy: true, // Enable high accuracy mode if available
+            maximumAge: 0, // Get the current location regardless of the cached position age
+            timeout: 5000 // Set a timeout for 5 seconds
+        };
+
+        // Start watching the position changes
+        var watchId = navigator.geolocation.watchPosition(function (position) {
             var lat = position.coords.latitude;
             var lon = position.coords.longitude;
             currentLocation = [lat, lon];
@@ -13,18 +21,15 @@ function getCurrentLocation() {
                 map.removeLayer(currentLocationMarker);
             }
 
-            // Define a custom HTML structure for the icon (only the Font Awesome icon)
             var myIcon = L.AwesomeMarkers.icon({
                 prefix: 'fa',
                 icon : 'person-walking',
                 markerColor: 'red',
             });
 
-            // Create a marker with the custom icon and add it to the map
             currentLocationMarker = L.marker(currentLocation, {icon: myIcon,}).addTo(map);
 
             map.panTo(new L.LatLng(lat, lon), 12);
-
         }, function (error) {
             // Handle geolocation errors
             Swal.fire({
@@ -32,7 +37,7 @@ function getCurrentLocation() {
                 title: 'Error',
                 text: 'Error getting location: ' + error.message,
             });
-        });
+        }, options);
     } else {
         // Handle browsers that don't support geolocation
         Swal.fire({
