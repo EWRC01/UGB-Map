@@ -1,18 +1,17 @@
 var map;
 var currentLocationMarker;
 var currentLocation = [0, 0];
+var isFirstLocation = true;
 
 function getCurrentLocation() {
     if ("geolocation" in navigator) {
-        // Set options for watchPosition (you can adjust these according to your needs)
         var options = {
-            enableHighAccuracy: true, // Enable high accuracy mode if available
-            maximumAge: 0, // Get the current location regardless of the cached position age
-            timeout: 5000 // Set a timeout for 5 seconds
+            enableHighAccuracy: true,
+            maximumAge: 0,
+            timeout: 5000
         };
 
-        // Start watching the position changes
-        var watchId = navigator.geolocation.watchPosition(function (position) {
+        navigator.geolocation.getCurrentPosition(function (position) {
             var lat = position.coords.latitude;
             var lon = position.coords.longitude;
             currentLocation = [lat, lon];
@@ -23,15 +22,17 @@ function getCurrentLocation() {
 
             var myIcon = L.AwesomeMarkers.icon({
                 prefix: 'fa',
-                icon : 'person-walking',
+                icon: 'person-walking',
                 markerColor: 'red',
             });
 
-            currentLocationMarker = L.marker(currentLocation, {icon: myIcon,}).addTo(map);
+            currentLocationMarker = L.marker(currentLocation, { icon: myIcon }).addTo(map);
 
-            map.panTo(new L.LatLng(lat, lon), 12);
+            if (isFirstLocation) {
+                map.setView(new L.LatLng(lat, lon), 12);
+                isFirstLocation = false;
+            }
         }, function (error) {
-            // Handle geolocation errors
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
@@ -39,7 +40,6 @@ function getCurrentLocation() {
             });
         }, options);
     } else {
-        // Handle browsers that don't support geolocation
         Swal.fire({
             icon: 'error',
             title: 'Error',
@@ -47,3 +47,22 @@ function getCurrentLocation() {
         });
     }
 }
+
+window.addEventListener('load', function () {
+    // Initialize your map here
+
+    // Assuming you have initialized your map (map = L.map(...)) here
+
+    // Get current location on page load
+    getCurrentLocation();
+
+    // Event listener for the "Get Current Location" button
+    document.getElementById("getCurrentLocationButton").addEventListener("click", function () {
+        // Get current location on button click
+        getCurrentLocation();
+
+        // Center the map on the current location marker
+        var latLng = currentLocationMarker.getLatLng();
+        map.setView(latLng, 12);
+    });
+});

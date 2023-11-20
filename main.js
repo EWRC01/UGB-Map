@@ -1,12 +1,9 @@
 
 
-window.addEventListener('load', getCurrentLocation);
-
 // Initialize a counter to keep track of the number of times 'Calculate Instructions' is clicked
 let calculateInstructionsClickCount = 0;
 
 // Event listener for the "Get Current Location" button (this remains the same)
-document.getElementById("getCurrentLocationButton").addEventListener("click", getCurrentLocation);
 
 
 
