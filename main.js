@@ -3,12 +3,6 @@
 // Initialize a counter to keep track of the number of times 'Calculate Instructions' is clicked
 let calculateInstructionsClickCount = 0;
 
-// Event listener for the "Get Current Location" button (this remains the same)
-
-
-
-
-// Get the theme toggle button and body element
 const themeToggle = document.getElementById('checkbox');
 const bodyElement = document.body;
 
@@ -60,7 +54,6 @@ async function handleDestinationSelection() {
         return; // Exit the function, no need to proceed
     }
 
-    // If not close to any specific room in the building, perform other actions
     toggleSidebar();
     destinationCoordinates = selectedOption.value.split(',').map(parseFloat);
     if (currentLocation) {
@@ -102,6 +95,7 @@ function handleComboBoxChange() {
     } else {
         calculateButton.disabled = false;
         speakButton.disabled = false;
+        clickButton();
         
        
     }
